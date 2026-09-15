@@ -34,7 +34,7 @@ hamburger.addEventListener('click', () => {
   navLinks.classList.toggle('open');
 });
 
-navLinks.querySelectorAll('a').forEach(link => {
+navLinks.querySelectorAll('a[href^="#"]').forEach(link => {
   link.addEventListener('click', () => navLinks.classList.remove('open'));
 });
 
@@ -49,13 +49,16 @@ function updateScrollProgress() {
   const percent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
   scrollProgress.style.width = percent + '%';
 }
+
 window.addEventListener('scroll', updateScrollProgress, { passive: true });
 updateScrollProgress();
 
 // =========================================================
 // Reveal-on-scroll animations
 // =========================================================
-const revealTargets = document.querySelectorAll('.section-heading, .about-text, .edu-item, .timeline-item, .skill-group, .project-card, .achieve-card, .cert-item, .contact-grid > *');
+const revealTargets = document.querySelectorAll(
+  '.section-heading, .about-text, .edu-item, .timeline-item, .skill-group, .project-card, .achieve-card, .cert-item, .contact-grid > *'
+);
 
 revealTargets.forEach(el => el.classList.add('reveal'));
 
@@ -80,8 +83,12 @@ const navObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       const id = entry.target.getAttribute('id');
+
       navAnchors.forEach(a => {
-        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        a.classList.toggle(
+          'active',
+          a.getAttribute('href') === '#' + id
+        );
       });
     }
   });
@@ -105,10 +112,12 @@ const formStatus = document.getElementById('formStatus');
 if (contactForm) {
   contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const action = contactForm.getAttribute('action');
 
     if (!action || action.includes('YOUR_FORM_ID')) {
-      formStatus.textContent = 'Form endpoint not configured yet — see README.md to connect Formspree or EmailJS.';
+      formStatus.textContent =
+        'Form endpoint not configured yet — see README.md to connect Formspree or EmailJS.';
       formStatus.className = 'form-status error';
       return;
     }
@@ -124,15 +133,18 @@ if (contactForm) {
       });
 
       if (response.ok) {
-        formStatus.textContent = 'Message sent — thank you! I\'ll get back to you soon.';
+        formStatus.textContent =
+          'Message sent — thank you! I\'ll get back to you soon.';
         formStatus.className = 'form-status success';
         contactForm.reset();
       } else {
-        formStatus.textContent = 'Something went wrong. Please try emailing me directly.';
+        formStatus.textContent =
+          'Something went wrong. Please try emailing me directly.';
         formStatus.className = 'form-status error';
       }
     } catch (err) {
-      formStatus.textContent = 'Network error. Please try emailing me directly.';
+      formStatus.textContent =
+        'Network error. Please try emailing me directly.';
       formStatus.className = 'form-status error';
     }
   });
